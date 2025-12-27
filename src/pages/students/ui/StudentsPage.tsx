@@ -7,6 +7,7 @@ import {
   Container,
   Divider,
   Group,
+  Modal,
   Menu,
   Pagination,
   Paper,
@@ -19,7 +20,6 @@ import {
   Title,
 } from '@mantine/core';
 import {
-  Download,
   MoreVertical,
   Plus,
   Search,
@@ -96,7 +96,19 @@ const MOCK_STUDENTS: Student[] = [
   },
 ];
 
-function StatCard({ label, value, delta, positive }: { label: string; value: string; delta?: string; positive?: boolean }) {
+interface StatCardProps {
+  label: string;
+  value: string;
+  delta?: string;
+  positive?: boolean
+}
+
+function StatCard({
+  label,
+  value,
+  delta,
+  positive,
+}: StatCardProps) {
   return (
     <Paper withBorder radius="md" p="lg">
       <Text size="sm" c="dimmed" mb={8}>
@@ -130,8 +142,67 @@ export function StudentsPage() {
 
   const [progressFilter, setProgressFilter] = useState<string | null>(null);
 
+  // Local students list so we can append newly added students
+  const [students, setStudents] = useState<Student[]>(MOCK_STUDENTS);
+
+  // Add-by-phone modal state
+  const [addOpen, setAddOpen] = useState(false);
+
+  const [phone, setPhone] = useState('');
+
+  const [searching, setSearching] = useState(false);
+
+  const [foundUser, setFoundUser] = useState<{ id: string; name: string } | null>(null);
+
+  const [notFound, setNotFound] = useState(false);
+
+  const resetAddState = () => {
+    setPhone('');
+    setSearching(false);
+    setFoundUser(null);
+    setNotFound(false);
+  };
+
+  const searchByPhone = async () => {
+    setSearching(true);
+    setFoundUser(null);
+    setNotFound(false);
+    // Имитация запроса на сервер для поиска пользователя по телефону
+    await new Promise((r) => setTimeout(r, 600));
+    const digits = phone.replace(/\D/g, '');
+
+    // Простая заглушка: на некоторые номера "находим" пользователей
+    const map: Record<string, { id: string; name: string }> = {
+      '77001112233': { id: 'u-101', name: 'Иван Иванов' },
+      '77001234567': { id: 'u-102', name: 'Мария Петрова' },
+      '79998887766': { id: 'u-103', name: 'Александр Попов' },
+    };
+
+    const user = map[digits] ?? null;
+
+    setFoundUser(user);
+    setNotFound(!user);
+    setSearching(false);
+  };
+
+  const confirmAddStudent = () => {
+    if (!foundUser) return;
+    const newStudent: Student = {
+      id: `${Date.now()}`,
+      name: foundUser.name,
+      email: `${foundUser.id}@example.com`,
+      group: 'Без группы',
+      progress: 0,
+      status: 'active',
+    };
+
+    setStudents((prev) => [newStudent, ...prev]);
+    setAddOpen(false);
+    resetAddState();
+  };
+
   const filtered = useMemo(() => {
-    return MOCK_STUDENTS.filter((s) => {
+    return students.filter((s) => {
       const q = query.trim().toLowerCase();
 
       const byQuery = !q
@@ -153,10 +224,52 @@ export function StudentsPage() {
 
       return byQuery && byGroup && byStatus && byProgress;
     });
-  }, [query, group, status, progressFilter]);
+  }, [students, query, group, status, progressFilter]);
 
   return (
     <Container size="xl">
+      {/* Add Student Modal */}
+      <Modal opened={addOpen} onClose={() => { setAddOpen(false); resetAddState(); }} title="Добавить ученика" centered>
+        {!foundUser && (
+          <>
+            <TextInput
+              label="Номер телефона"
+              placeholder="Например, +7 700 111 22 33"
+              value={phone}
+              onChange={(e) => setPhone(e.currentTarget.value)}
+              mb="sm"
+            />
+            <Group justify="flex-end">
+              <Button loading={searching} onClick={searchByPhone}>
+                Добавить
+              </Button>
+            </Group>
+            {notFound && (
+              <Text c="red" size="sm" mt="sm">
+                Пользователь с таким телефоном не найден
+              </Text>
+            )}
+          </>
+        )}
+        {foundUser && (
+          <>
+            <Text size="sm" c="dimmed" mb={4}>Найден пользователь:</Text>
+            <Paper withBorder p="md" radius="md" mb="md">
+              <Group>
+                <Avatar radius="xl" color="blue">{foundUser.name.slice(0,1)}</Avatar>
+                <Box>
+                  <Text fw={600}>{foundUser.name}</Text>
+                  <Text size="xs" c="dimmed">Телефон: {phone}</Text>
+                </Box>
+              </Group>
+            </Paper>
+            <Group justify="flex-end">
+              <Button variant="default" onClick={resetAddState}>Изменить номер</Button>
+              <Button onClick={confirmAddStudent}>Добавить</Button>
+            </Group>
+          </>
+        )}
+      </Modal>
       {/* Header */}
       <Group justify="space-between" mb="lg">
         <div>
@@ -164,7 +277,9 @@ export function StudentsPage() {
           <Text size="sm" c="dimmed">Мониторинг прогресса, успеваемости и посещаемости студентов</Text>
         </div>
         <Group>
-          <Button leftSection={<Plus size={16} />}>Добавить ученика</Button>
+          <Button leftSection={<Plus size={16} />} onClick={() => { setAddOpen(true); }}>
+            Добавить ученика
+          </Button>
         </Group>
       </Group>
 
@@ -190,7 +305,7 @@ export function StudentsPage() {
           <Select
             label={undefined}
             placeholder="Группа: Все"
-            data={[...new Set(MOCK_STUDENTS.map((s) => s.group))]}
+            data={[...new Set(students.map((s) => s.group))]}
             clearable
             value={group}
             onChange={setGroup}
@@ -285,7 +400,7 @@ export function StudentsPage() {
 
         <Divider />
         <Group justify="space-between" p="sm">
-          <Text size="sm" c="dimmed">Показано {filtered.length} из {MOCK_STUDENTS.length} результатов</Text>
+          <Text size="sm" c="dimmed">Показано {filtered.length} из {students.length} результатов</Text>
           <Pagination total={14} value={1} onChange={() => {}} size="sm" radius="md" />
         </Group>
       </Paper>

@@ -7,4 +7,5 @@ export const Routes = {
   Programs: '/programs',
   Materials: '/materials',
   Schedule: '/schedule',
+  Chat: '/chat',
 } as const;

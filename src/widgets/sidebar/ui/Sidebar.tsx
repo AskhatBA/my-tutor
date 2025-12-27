@@ -24,7 +24,7 @@ const items: Item[] = [
   { label: 'Материалы', to: RouteNames.Materials, icon: <BookOpen size={18} /> },
   { label: 'Тестирование', to: RouteNames.Tests, icon: <FlaskConical size={18} /> },
   { label: 'Расписание', to: RouteNames.Schedule, icon: <Calendar size={18} /> },
-  { label: 'Чат', to: '/teacher/chat', icon: <MessageSquare size={18} /> },
+  { label: 'Чат', to: RouteNames.Chat, icon: <MessageSquare size={18} /> },
   { label: 'Программы', to: RouteNames.Programs, icon: <Layers size={18} /> },
   { label: 'Учителя', to: '/teacher/teachers', icon: <GraduationCap size={18} /> },
 ];

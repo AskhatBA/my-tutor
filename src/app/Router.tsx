@@ -4,6 +4,7 @@ import { StudentsPage } from '@/pages/students';
 import { SchedulePage } from '@/pages/schedule';
 import { NotFoundPage } from '@/pages/not-found';
 import { Routes as RouteNames } from '@/shared/constants';
+import { ChatPage } from '@/pages/chat';
 
 export function Router() {
   return (
@@ -25,6 +26,7 @@ export function Router() {
       <Route path={RouteNames.Programs} element={<div>Программы (в разработке)</div>}/>
       <Route path={RouteNames.Materials} element={<div>Материалы (в разработке)</div>}/>
       <Route path={RouteNames.Schedule} element={<SchedulePage/>}/>
+      <Route path={RouteNames.Chat} element={<ChatPage/>}/>
 
       <Route path="*" element={<NotFoundPage />} />
     </Routes>
