@@ -20,6 +20,8 @@ export function Header({ opened, toggle }: Props) {
       <Group>
         <Burger opened={opened} onClick={toggle} hiddenFrom="sm" size="sm" />
         <Group gap="xs" align="center">
+          {/* eslint-disable-next-line @typescript-eslint/ban-ts-comment */}
+          {/*@ts-expect-error*/}
           <Image src={logo} alt="MyTutor logo" h={28} w="auto" fit="contain" styles={{ image: { display: 'block' } }} />
         </Group>
       </Group>
