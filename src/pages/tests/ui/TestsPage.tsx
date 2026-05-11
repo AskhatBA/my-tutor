@@ -15,6 +15,7 @@ import { TestRow } from './TestRow';
 import { SystemTestsSidebar } from './SystemTestsSidebar';
 import { TestFormModal } from './TestFormModal';
 import { AssignToStudentsModal } from './AssignToStudentsModal';
+import { TestResultsModal } from './TestResultsModal';
 
 const mockStudents = [
   {
@@ -95,6 +96,13 @@ export function TestsPage() {
 
   const [assigningTest, setAssigningTest] = useState<Test | null>(null);
 
+  const [resultsTestId, setResultsTestId] = useState<string | null>(null);
+
+  const resultsTest = useMemo(
+    () => myTests.find((t) => t.id === resultsTestId) ?? null,
+    [myTests, resultsTestId],
+  );
+
   const myTestKeys = useMemo(
     () => new Set(myTests.map((t) => t.tag + '|' + t.title)),
     [myTests],
@@ -162,6 +170,7 @@ export function TestsPage() {
                     onDelete={() => setDeletingTest(test)}
                     onAssign={() => setAssigningTest(test)}
                     onUnassign={(studentId) => unassignStudent(test.id, studentId)}
+                    onShowResults={() => setResultsTestId(test.id)}
                   />
                 );
               })}
@@ -191,6 +200,13 @@ export function TestsPage() {
         alreadyAssignedIds={assigningTest?.assignedStudentIds ?? []}
         onClose={() => setAssigningTest(null)}
         onSubmit={(ids) => assigningTest && assignToStudents(assigningTest.id, ids)}
+      />
+
+      <TestResultsModal
+        opened={resultsTest !== null}
+        test={resultsTest}
+        studentsById={studentsById}
+        onClose={() => setResultsTestId(null)}
       />
 
       <Modal

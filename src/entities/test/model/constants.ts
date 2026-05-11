@@ -1,4 +1,4 @@
-import type { TestDifficulty } from './types';
+import type { AttemptStatus, TestDifficulty } from './types';
 
 export const DIFFICULTY_LABEL: Record<TestDifficulty, string> = {
   easy: 'Лёгкий',
@@ -17,3 +17,15 @@ export const DIFFICULTY_OPTIONS = [
   { value: 'medium', label: DIFFICULTY_LABEL.medium },
   { value: 'hard', label: DIFFICULTY_LABEL.hard },
 ];
+
+export const ATTEMPT_STATUS_LABEL: Record<AttemptStatus, string> = {
+  pending: 'Ожидает',
+  in_progress: 'В процессе',
+  completed: 'Завершён',
+};
+
+export const ATTEMPT_STATUS_COLOR: Record<AttemptStatus, string> = {
+  pending: 'gray',
+  in_progress: 'yellow',
+  completed: 'green',
+};

@@ -11,6 +11,7 @@ import {
   Tooltip,
 } from '@mantine/core';
 import {
+  IconChartBar,
   IconDots,
   IconPencil,
   IconSend,
@@ -29,6 +30,7 @@ interface TestRowProps {
   onDelete: () => void;
   onAssign: () => void;
   onUnassign: (studentId: string) => void;
+  onShowResults: () => void;
 }
 
 export function TestRow({
@@ -39,7 +41,10 @@ export function TestRow({
   onDelete,
   onAssign,
   onUnassign,
+  onShowResults,
 }: TestRowProps) {
+  const hasResults = test.attempts.length > 0;
+
   return (
     <Card withBorder radius="md" p="md">
       <Group justify="space-between" align="flex-start" wrap="nowrap">
@@ -94,6 +99,16 @@ export function TestRow({
           <Tooltip label="Отправить ученику">
             <ActionIcon variant="subtle" onClick={onAssign} aria-label="assign">
               <IconSend size={18} />
+            </ActionIcon>
+          </Tooltip>
+          <Tooltip label={hasResults ? 'Результаты' : 'Нет результатов'}>
+            <ActionIcon
+              variant="subtle"
+              onClick={onShowResults}
+              disabled={!hasResults}
+              aria-label="results"
+            >
+              <IconChartBar size={18} />
             </ActionIcon>
           </Tooltip>
           <Menu shadow="md" position="bottom-end" withinPortal>

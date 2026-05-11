@@ -1,5 +1,6 @@
 import { create } from 'zustand';
-import type { Test, TestDraft } from './types';
+import type { Test, TestAttempt, TestDraft } from './types';
+import { generateMockAttempt } from './mockAttempts';
 
 interface TestStore {
   myTests: Test[];
@@ -32,7 +33,12 @@ const initialMyTests: Test[] = [
     comment: 'Для 5-6 классов, базовый уровень',
     isFavorite: true,
     isSystem: false,
-    assignedStudentIds: [],
+    assignedStudentIds: ['stu-1', 'stu-2', 'stu-3'],
+    attempts: [
+      generateMockAttempt('stu-1', 'grammar', 'completed'),
+      generateMockAttempt('stu-2', 'grammar', 'in_progress'),
+      generateMockAttempt('stu-3', 'grammar', 'pending'),
+    ],
     createdAt: now(),
     updatedAt: now(),
   },
@@ -46,7 +52,8 @@ const initialMyTests: Test[] = [
     comment: '',
     isFavorite: false,
     isSystem: false,
-    assignedStudentIds: [],
+    assignedStudentIds: ['stu-1'],
+    attempts: [generateMockAttempt('stu-1', 'vocabulary', 'completed')],
     createdAt: now(),
     updatedAt: now(),
   },
@@ -64,6 +71,7 @@ const initialSystemTests: Test[] = [
     isFavorite: false,
     isSystem: true,
     assignedStudentIds: [],
+    attempts: [],
     createdAt: now(),
     updatedAt: now(),
   },
@@ -78,6 +86,7 @@ const initialSystemTests: Test[] = [
     isFavorite: false,
     isSystem: true,
     assignedStudentIds: [],
+    attempts: [],
     createdAt: now(),
     updatedAt: now(),
   },
@@ -92,6 +101,7 @@ const initialSystemTests: Test[] = [
     isFavorite: false,
     isSystem: true,
     assignedStudentIds: [],
+    attempts: [],
     createdAt: now(),
     updatedAt: now(),
   },
@@ -111,6 +121,7 @@ export const useTestStore = create<TestStore>((set) => ({
           isFavorite: false,
           isSystem: false,
           assignedStudentIds: [],
+          attempts: [],
           createdAt: now(),
           updatedAt: now(),
         },
@@ -157,6 +168,7 @@ export const useTestStore = create<TestStore>((set) => ({
             isSystem: false,
             isFavorite: false,
             assignedStudentIds: [],
+            attempts: [],
             createdAt: now(),
             updatedAt: now(),
           },
@@ -166,15 +178,20 @@ export const useTestStore = create<TestStore>((set) => ({
 
   assignToStudents: (id, studentIds) =>
     set((state) => ({
-      myTests: state.myTests.map((t) =>
-        t.id === id
-          ? {
-            ...t,
-            assignedStudentIds: Array.from(new Set([...t.assignedStudentIds, ...studentIds])),
-            updatedAt: now(),
-          }
-          : t,
-      ),
+      myTests: state.myTests.map((t) => {
+        if (t.id !== id) return t;
+
+        const newIds = studentIds.filter((sid) => !t.assignedStudentIds.includes(sid));
+
+        const newAttempts: TestAttempt[] = newIds.map((sid) => generateMockAttempt(sid, t.tag));
+
+        return {
+          ...t,
+          assignedStudentIds: [...t.assignedStudentIds, ...newIds],
+          attempts: [...t.attempts, ...newAttempts],
+          updatedAt: now(),
+        };
+      }),
     })),
 
   unassignStudent: (id, studentId) =>
@@ -184,6 +201,7 @@ export const useTestStore = create<TestStore>((set) => ({
           ? {
             ...t,
             assignedStudentIds: t.assignedStudentIds.filter((s) => s !== studentId),
+            attempts: t.attempts.filter((a) => a.studentId !== studentId),
             updatedAt: now(),
           }
           : t,
