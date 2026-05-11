@@ -142,7 +142,7 @@ export function SchedulePage() {
   const onToday = () => setCurrent(new Date());
 
   return (
-    <Container size="xl">
+    <Box>
       <Group justify="space-between" align="center" mb="md">
         <Group>
           <ActionIcon size="lg" variant="default" onClick={onPrev} aria-label="Предыдущая неделя">
@@ -289,7 +289,7 @@ export function SchedulePage() {
           <Text size="xs">Вебинар</Text>
         </Group>
       </Group>
-    </Container>
+    </Box>
   );
 }
 

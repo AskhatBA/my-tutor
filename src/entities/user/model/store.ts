@@ -11,7 +11,13 @@ interface UserStore {
 export const useUserStore = create<UserStore>()(
   persist(
     (set) => ({
-      user: null,
+      user: {
+        role: 'teacher',
+        name: 'Айдос Нурбеков',
+        avatar: undefined,
+        email: 'test@test.com',
+        id: '123',
+      },
       setUser: (user) => set({ user }),
     }),
     { name: USER_STORE },

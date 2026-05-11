@@ -9,7 +9,6 @@ import {
   Divider,
   Grid,
   Group,
-  Image,
   Paper,
   Pill,
   SegmentedControl,
@@ -74,7 +73,9 @@ function FileIcon({ type }: { type: FileItem['type'] }) {
 
 export function MaterialsPage() {
   const [view, setView] = useState<'grid' | 'list'>('grid');
+
   const [activeFilter, setActiveFilter] = useState<'all' | 'docs' | 'video' | 'images'>('all');
+
   const [selected, setSelected] = useState<FileItem | null>(mockFiles[0]);
 
   const breadcrumbs = (
@@ -198,13 +199,9 @@ export function MaterialsPage() {
       </Grid.Col>
 
       <Grid.Col span={{ base: 12, lg: 4 }}>
-        <Paper withBorder radius="md" p="md">
+        <Paper withBorder radius="md" p="md" style={{ height: '100%' }} sx={{ overflowY: 'auto' }}>
           {selected ? (
             <Stack gap="md">
-              <Image
-                src={selected.preview || 'https://images.unsplash.com/photo-1526378787940-576a539ba69d?q=80&w=800&auto=format&fit=crop'}
-                radius="sm"
-              />
               <Group gap={6}>
                 <Badge variant="light" leftSection={<FileIcon type={selected.type} />}>PDF DOCUMENT</Badge>
               </Group>

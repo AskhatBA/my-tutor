@@ -1,5 +1,5 @@
 // Axios или fetch с базовым URL и interceptors
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000/api'
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000/api';
 
 export const apiClient = {
   async get<T>(endpoint: string): Promise<T> {
@@ -8,9 +8,11 @@ export const apiClient = {
       headers: {
         'Content-Type': 'application/json',
       },
-    })
-    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`)
-    return response.json()
+    });
+
+    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+
+    return response.json();
   },
 
   async post<T>(endpoint: string, data?: unknown): Promise<T> {
@@ -20,9 +22,11 @@ export const apiClient = {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify(data),
-    })
-    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`)
-    return response.json()
+    });
+
+    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+
+    return response.json();
   },
 
   async put<T>(endpoint: string, data?: unknown): Promise<T> {
@@ -32,9 +36,11 @@ export const apiClient = {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify(data),
-    })
-    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`)
-    return response.json()
+    });
+
+    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+
+    return response.json();
   },
 
   async delete<T>(endpoint: string): Promise<T> {
@@ -43,8 +49,10 @@ export const apiClient = {
       headers: {
         'Content-Type': 'application/json',
       },
-    })
-    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`)
-    return response.json()
+    });
+
+    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+
+    return response.json();
   },
-}
+};
