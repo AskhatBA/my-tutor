@@ -1,9 +1,9 @@
-import type { AttemptAnswer, AttemptStatus, TestAttempt } from './types';
+import type { AttemptAnswer, AttemptStatus, QuestionType, TestAttempt } from './types';
 
 interface QuestionSeed {
   q: string;
   a: string;
-  type: 'multiple-choice' | 'text' | 'true-false';
+  type: QuestionType;
   options?: string[];
 }
 
@@ -12,31 +12,31 @@ const QUESTION_POOL: Record<string, QuestionSeed[]> = {
     {
       q: 'She ___ to school every day.',
       a: 'goes',
-      type: 'multiple-choice',
+      type: 'single-choice',
       options: ['go', 'goes', 'going', 'gone'],
     },
     {
       q: 'There ___ many books on the shelf.',
       a: 'are',
-      type: 'multiple-choice',
+      type: 'single-choice',
       options: ['is', 'are', 'be', 'am'],
     },
     {
       q: 'I have lived here ___ 2010.',
       a: 'since',
-      type: 'multiple-choice',
+      type: 'single-choice',
       options: ['for', 'since', 'from', 'at'],
     },
     {
       q: 'If I ___ rich, I would travel.',
       a: 'were',
-      type: 'multiple-choice',
+      type: 'single-choice',
       options: ['am', 'was', 'were', 'be'],
     },
     {
       q: 'He doesn\'t like ___ coffee.',
       a: 'drinking',
-      type: 'multiple-choice',
+      type: 'single-choice',
       options: ['drink', 'drinking', 'to drinking', 'drunk'],
     },
   ],
@@ -44,7 +44,7 @@ const QUESTION_POOL: Record<string, QuestionSeed[]> = {
     {
       q: 'A person who travels for pleasure is a...',
       a: 'tourist',
-      type: 'multiple-choice',
+      type: 'single-choice',
       options: ['tourist', 'driver', 'pilot', 'guide'],
     },
     {
@@ -55,7 +55,7 @@ const QUESTION_POOL: Record<string, QuestionSeed[]> = {
     {
       q: 'A place where you stay during a trip',
       a: 'hotel',
-      type: 'multiple-choice',
+      type: 'single-choice',
       options: ['hotel', 'station', 'airport', 'museum'],
     },
     {
@@ -68,7 +68,7 @@ const QUESTION_POOL: Record<string, QuestionSeed[]> = {
     {
       q: 'Choose the correct sentence.',
       a: 'I have been to Paris.',
-      type: 'multiple-choice',
+      type: 'single-choice',
       options: ['I have been to Paris.', 'I am been to Paris.', 'I been to Paris.', 'I has been to Paris.'],
     },
     {
@@ -79,13 +79,13 @@ const QUESTION_POOL: Record<string, QuestionSeed[]> = {
     {
       q: '"Despite" is followed by...',
       a: 'a noun or -ing',
-      type: 'multiple-choice',
+      type: 'single-choice',
       options: ['a noun or -ing', 'a clause', 'an infinitive', 'an adjective'],
     },
     {
       q: 'CEFR уровень B2 это:',
       a: 'Upper-Intermediate',
-      type: 'multiple-choice',
+      type: 'single-choice',
       options: ['Beginner', 'Intermediate', 'Upper-Intermediate', 'Advanced'],
     },
   ],
@@ -93,7 +93,7 @@ const QUESTION_POOL: Record<string, QuestionSeed[]> = {
     {
       q: 'Активное слушание включает в себя:',
       a: 'парафраз и уточняющие вопросы',
-      type: 'multiple-choice',
+      type: 'single-choice',
       options: [
         'парафраз и уточняющие вопросы',
         'перебивание собеседника',
@@ -104,7 +104,7 @@ const QUESTION_POOL: Record<string, QuestionSeed[]> = {
     {
       q: 'Метод "Я-сообщения" используется для:',
       a: 'выражения чувств без обвинения',
-      type: 'multiple-choice',
+      type: 'single-choice',
       options: [
         'выражения чувств без обвинения',
         'критики собеседника',
@@ -115,7 +115,7 @@ const QUESTION_POOL: Record<string, QuestionSeed[]> = {
     {
       q: 'Конструктивная критика — это:',
       a: 'обратная связь с примерами и решениями',
-      type: 'multiple-choice',
+      type: 'single-choice',
       options: [
         'обратная связь с примерами и решениями',
         'указание на недостатки',
@@ -125,10 +125,10 @@ const QUESTION_POOL: Record<string, QuestionSeed[]> = {
     },
   ],
   default: [
-    { q: 'Вопрос 1', a: 'A', type: 'multiple-choice', options: ['A', 'B', 'C', 'D'] },
-    { q: 'Вопрос 2', a: 'B', type: 'multiple-choice', options: ['A', 'B', 'C', 'D'] },
-    { q: 'Вопрос 3', a: 'C', type: 'multiple-choice', options: ['A', 'B', 'C', 'D'] },
-    { q: 'Вопрос 4', a: 'D', type: 'multiple-choice', options: ['A', 'B', 'C', 'D'] },
+    { q: 'Вопрос 1', a: 'A', type: 'single-choice', options: ['A', 'B', 'C', 'D'] },
+    { q: 'Вопрос 2', a: 'B', type: 'single-choice', options: ['A', 'B', 'C', 'D'] },
+    { q: 'Вопрос 3', a: 'C', type: 'single-choice', options: ['A', 'B', 'C', 'D'] },
+    { q: 'Вопрос 4', a: 'D', type: 'single-choice', options: ['A', 'B', 'C', 'D'] },
   ],
 };
 

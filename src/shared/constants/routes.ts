@@ -5,6 +5,7 @@ export const Routes = {
   StudentDetails: '/students/:id',
   Lessons: '/lessons',
   Tests: '/tests',
+  TestCreate: '/tests/new',
   Programs: '/programs',
   Materials: '/materials',
   Schedule: '/schedule',

@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
+import { Link } from 'react-router-dom';
 import {
   Button,
   Grid,
@@ -11,6 +12,7 @@ import {
 import { IconPlus } from '@tabler/icons-react';
 import { useTestStore, type Test, type TestDraft } from '@/entities/test';
 import { useStudentStore } from '@/entities/student/model/store';
+import { Routes } from '@/shared/constants';
 import { TestRow } from './TestRow';
 import { SystemTestsSidebar } from './SystemTestsSidebar';
 import { TestFormModal } from './TestFormModal';
@@ -60,8 +62,6 @@ export function TestsPage() {
   const myTests = useTestStore((s) => s.myTests);
 
   const systemTests = useTestStore((s) => s.systemTests);
-
-  const createTest = useTestStore((s) => s.createTest);
 
   const updateTest = useTestStore((s) => s.updateTest);
 
@@ -113,22 +113,13 @@ export function TestsPage() {
     [myTests],
   );
 
-  const openCreate = () => {
-    setEditingTest(null);
-    setFormOpened(true);
-  };
-
   const openEdit = (test: Test) => {
     setEditingTest(test);
     setFormOpened(true);
   };
 
   const handleSubmit = (draft: TestDraft) => {
-    if (editingTest) {
-      updateTest(editingTest.id, draft);
-    } else {
-      createTest(draft);
-    }
+    if (editingTest) updateTest(editingTest.id, draft);
   };
 
   const handleDeleteConfirm = () => {
@@ -144,7 +135,11 @@ export function TestsPage() {
         <Stack gap="md">
           <Group justify="space-between" align="center">
             <Title order={2}>Тесты</Title>
-            <Button leftSection={<IconPlus size={16} />} onClick={openCreate}>
+            <Button
+              leftSection={<IconPlus size={16} />}
+              component={Link}
+              to={Routes.TestCreate}
+            >
               Создать тест
             </Button>
           </Group>
